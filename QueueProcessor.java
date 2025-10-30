@@ -51,50 +51,139 @@ public class QueueProcessor {
 	
 	public void addAgent( Agent agent ) {
 		
-		//PLEASE INSERT YOUR CODE HERE
+		// INSERT HERE
+		if ( agent == null ) {
+			System.out.println("Error: cannot add null agent.");
+			return;
+		}
+
+		if ( agent.isIdle() ) { agents.add( agent ); }
+		else { occupiedAgents.add( agent ); }
+
+		// TO HERE
 	}
 	
 	public void addAgent( Agent agent, Client client ) {
 		
-		//PLEASE INSERT YOUR CODE HERE
+		// INSERT HERE
+
+		if ( client != null ) {
+			System.out.println("Error: cannot add null customer.");
+		}
+
+		else {
+			agent.currentClient = client;
+		}
+		
+		addAgent( agent );
+		
+		// TO HERE
 	}
 	
 	public void addClient( Client client ) {
-		//PLEASE INSERT YOUR CODE HERE
+
+		// INSERT HERE
+		if ( client == null ) {
+			System.out.println("Error: cannot add null customer.");
+			return;
+		}
+
+		clients.add( client );
+
+		// TO HERE
+
 	}
 	
 	public void serveClients() {
 		
-		//PLEASE INSERT YOUR CODE HERE
+		// INSERT HERE
+
+		// As long as there or free agents and unserved clients, assign first agent to first client
+		while ( !agents.isEmpty() &&  !clients.isEmpty() ) {
+			serveClient();
+		}
+
+
+		// TO HERE
+
 	}
 	
 	public Agent serveClient() {
 		
-		//PLEASE INSERT YOUR CODE HERE
-		return null;
+		// INSERT HERE
+		if ( agents.isEmpty() ) {
+			System.out.println("Error: No free agents available.");
+			return null;
+		}
+
+		if ( agents.isEmpty() ) {
+			System.out.println("Error: No customers waiting.");
+			return null;
+		}
+
+		Agent tempAgent = agents.poll();
+		tempAgent.currentClient = clients.poll();
+
+		return tempAgent;
+		// TO HERE
+		
 	}
 	
 	public List<Client> servingClients() {
 		
-		//PLEASE INSERT YOUR CODE HERE
-		return null;
+		// INSERT HERE
+
+		List<Client> helped = new LinkedList<Client>();
+
+		for (Agent i : occupiedAgents) {
+			helped.add(i.currentClient);
+		}
+
+		
+		return helped;
+		// TO HERE
+
 	}
 	
 	public String displayServingClients() {
 		
-		//PLEASE INSERT YOUR CODE HERE
-		return null;
+		// INSERT HERE
+		String output = "";
+
+		for (Client i :  servingClients() ) {
+			output += i + "\n";
+		}
+		
+		return output;
+		// TO HERE
+
 	}
 	
 	public String displayServiceLine() {
 		
-		//PLEASE INSERT YOUR CODE HERE
-		return null;
+		// INSERT HERE
+
+		String output = "";
+
+		for (Agent i : agents) {
+			output += i + "\n";
+		}
+
+		
+		return output;
+		// TO HERE
+
 	}
 	
 	public String makeAnnouncement( Agent agent ) {
 		
-		//PLEASE INSERT YOUR CODE HERE
+		// INSERT HERE
+
+
+
+		
 		return null;
+		// TO HERE
+
 	}
 } 
