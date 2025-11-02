@@ -52,6 +52,9 @@ public class QueueProcessor {
 	public void addAgent( Agent agent ) {
 		
 		// INSERT HERE
+
+		// I think this should use initialize to clear currentCustomer...
+
 		if ( agent == null ) {
 			System.out.println("Error: cannot add null agent.");
 			return;
@@ -66,9 +69,14 @@ public class QueueProcessor {
 	public void addAgent( Agent agent, Client client ) {
 		
 		// INSERT HERE
+		if ( agent == null ) {
+			System.out.println("Error: cannot add null agent.");
+			return;
+		}
 
-		if ( client != null ) {
+		if ( client == null ) {
 			System.out.println("Error: cannot add null customer.");
+			return;
 		}
 
 		else {
@@ -116,13 +124,15 @@ public class QueueProcessor {
 			return null;
 		}
 
-		if ( agents.isEmpty() ) {
+		if ( clients.isEmpty() ) {
 			System.out.println("Error: No customers waiting.");
 			return null;
 		}
 
 		Agent tempAgent = agents.poll();
 		tempAgent.currentClient = clients.poll();
+
+		occupiedAgents.add( tempAgent );
 
 		return tempAgent;
 		// TO HERE
@@ -150,8 +160,8 @@ public class QueueProcessor {
 		// INSERT HERE
 		String output = "";
 
-		for (Client i :  servingClients() ) {
-			output += i + "\n";
+		for (Client client :  servingClients() ) {
+			output += client + "\n";
 		}
 		
 		return output;
@@ -165,10 +175,9 @@ public class QueueProcessor {
 
 		String output = "";
 
-		for (Agent i : agents) {
-			output += i + "\n";
+		for (Agent agent : occupiedAgents) {
+			output += agent + "\n";
 		}
-
 		
 		return output;
 		// TO HERE
@@ -179,10 +188,11 @@ public class QueueProcessor {
 		
 		// INSERT HERE
 
+		// A string with announcement like "Serving CL0001 at station STA-002"
 
 
 		
-		return null;
+		return "Serving " + agent.getCurrentClient().getClientID() + " at station " + agent.getStation() + ".";
 		// TO HERE
 
 	}
