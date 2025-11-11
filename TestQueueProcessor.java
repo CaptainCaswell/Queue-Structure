@@ -60,7 +60,7 @@ public class TestQueueProcessor {
 					QueueProcessor.Agent ag = qp.serveClient();
 					String x = qp.makeAnnouncement( ag );
 					System.out.println( x );
-					Thread.sleep( 50 );
+					Thread.sleep( 500 );
 					System.out.println( qp.displayServiceLine() );
 					if( k == 5 ) {
 						int i = 0;

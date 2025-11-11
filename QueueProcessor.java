@@ -55,13 +55,9 @@ public class QueueProcessor {
 
 		// I think this should use initialize to clear currentCustomer...
 
-		if ( agent == null ) {
-			System.out.println("Error: cannot add null agent.");
-			return;
-		}
+		agent.initialize();
 
-		if ( agent.isIdle() ) { agents.add( agent ); }
-		else { occupiedAgents.add( agent ); }
+		agents.add( agent );
 
 		// TO HERE
 	}
@@ -69,21 +65,24 @@ public class QueueProcessor {
 	public void addAgent( Agent agent, Client client ) {
 		
 		// INSERT HERE
+
+		// Check for null agent
 		if ( agent == null ) {
 			System.out.println("Error: cannot add null agent.");
 			return;
 		}
 
+		// Check for null client (no client)
 		if ( client == null ) {
 			System.out.println("Error: cannot add null customer.");
-			return;
+			agents.add ( agent );
 		}
 
+		// If agent has a client (occupised)
 		else {
 			agent.currentClient = client;
+			occupiedAgents.add( agent );
 		}
-		
-		addAgent( agent );
 		
 		// TO HERE
 	}
@@ -119,6 +118,7 @@ public class QueueProcessor {
 	public Agent serveClient() {
 		
 		// INSERT HERE
+
 		if ( agents.isEmpty() ) {
 			System.out.println("Error: No free agents available.");
 			return null;
@@ -149,7 +149,6 @@ public class QueueProcessor {
 			helped.add(i.currentClient);
 		}
 
-		
 		return helped;
 		// TO HERE
 
@@ -190,9 +189,8 @@ public class QueueProcessor {
 
 		// A string with announcement like "Serving CL0001 at station STA-002"
 
-
-		
 		return "Serving " + agent.getCurrentClient().getClientID() + " at station " + agent.getStation() + ".";
+		
 		// TO HERE
 
 	}
