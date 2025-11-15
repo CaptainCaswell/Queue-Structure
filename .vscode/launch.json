@@ -1,0 +1,21 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch ServiceGUI",
+            "type": "java",
+            "request": "launch",
+            "mainClass": "ServiceGUI",
+            "args": "",
+            "vmArgs": "--module-path C:/javafx-sdk-25.0.1/lib --add-modules javafx.controls,javafx.fxml"
+        },
+        {
+            "name": "Launch QueueGUI",
+            "type": "java",
+            "request": "launch",
+            "mainClass": "QueueGUI",
+            "args": "",
+            "vmArgs": "--module-path C:/javafx-sdk-25.0.1/lib --add-modules javafx.controls,javafx.fxml"
+        }
+    ]
+}
