@@ -1,3 +1,5 @@
+package Assignment2;
+
 import java.util.*;
 
 public class QueueProcessor {
@@ -50,148 +52,88 @@ public class QueueProcessor {
 	public LinkedList<Agent> getOccupiedAgents() { return occupiedAgents; }
 	
 	public void addAgent( Agent agent ) {
-		
-		// INSERT HERE
-
-		// I think this should use initialize to clear currentCustomer...
-
-		agent.initialize();
-
-		agents.add( agent );
-
-		// TO HERE
+		if (agent != null) {
+			agent.initialize();
+			agents.addLast(agent);
+		}
 	}
 	
 	public void addAgent( Agent agent, Client client ) {
-		
-		// INSERT HERE
-
-		// Check for null agent
-		if ( agent == null ) {
-			System.out.println("Error: cannot add null agent.");
-			return;
-		}
-
-		// Check for null client (no client)
-		if ( client == null ) {
-			System.out.println("Error: cannot add null customer.");
-			agents.add ( agent );
-		}
-
-		// If agent has a client (occupised)
-		else {
+		if (agent != null && client == null) {
+			agent.initialize();
+			agents.addLast(agent);
+		} else if (agent != null) {
 			agent.currentClient = client;
-			occupiedAgents.add( agent );
+			occupiedAgents.addLast(agent);
 		}
-		
-		// TO HERE
 	}
 	
 	public void addClient( Client client ) {
-
-		// INSERT HERE
-		if ( client == null ) {
-			System.out.println("Error: cannot add null customer.");
-			return;
+		if (client != null) {
+			clients.addLast(client);
 		}
-
-		clients.add( client );
-
-		// TO HERE
-
 	}
 	
 	public void serveClients() {
-		
-		// INSERT HERE
-
-		// As long as there or free agents and unserved clients, assign first agent to first client
-		while ( !agents.isEmpty() &&  !clients.isEmpty() ) {
-			serveClient();
+		while (!clients.isEmpty() && !agents.isEmpty()) {
+			Client client = clients.pollFirst();
+			Agent agent = agents.pollFirst();
+			agent.currentClient = client;
+			occupiedAgents.addLast(agent);
 		}
-
-
-		// TO HERE
-
 	}
 	
 	public Agent serveClient() {
-		
-		// INSERT HERE
-
-		if ( agents.isEmpty() ) {
-			System.out.println("Error: No free agents available.");
-			return null;
+		if (!clients.isEmpty() && !agents.isEmpty()) {
+			Client client = clients.pollFirst();
+			Agent agent = agents.pollFirst();
+			agent.currentClient = client;
+			occupiedAgents.addLast(agent);
+			return agent;
 		}
-
-		if ( clients.isEmpty() ) {
-			System.out.println("Error: No customers waiting.");
-			return null;
-		}
-
-		Agent tempAgent = agents.poll();
-		tempAgent.currentClient = clients.poll();
-
-		occupiedAgents.add( tempAgent );
-
-		return tempAgent;
-		// TO HERE
-		
+		return null;
 	}
 	
 	public List<Client> servingClients() {
-		
-		// INSERT HERE
-
-		List<Client> helped = new LinkedList<Client>();
-
-		for (Agent i : occupiedAgents) {
-			helped.add(i.currentClient);
+		List<Client> clientsBeingServed = new ArrayList<Client>();
+		for (Agent agent : occupiedAgents) {
+			Client client = agent.getCurrentClient();
+			if (client != null) {
+				clientsBeingServed.addLast(client);
+			}
 		}
-
-		return helped;
-		// TO HERE
-
+		if (!clientsBeingServed.isEmpty()) return clientsBeingServed;
+		return null;
 	}
 	
 	public String displayServingClients() {
-		
-		// INSERT HERE
-		String output = "";
-
-		for (Client client :  servingClients() ) {
-			output += client + "\n";
+		List<Client> clientsBeingServed = servingClients();
+		if (!clientsBeingServed.isEmpty()) {
+			StringBuilder clientsBeingServedList = new StringBuilder();
+			for (Client client : clientsBeingServed) {
+				clientsBeingServedList.append(client.toString()).append("\n");
+			}
+			return clientsBeingServedList.toString();
 		}
-		
-		return output;
-		// TO HERE
-
+		return null;
 	}
 	
 	public String displayServiceLine() {
-		
-		// INSERT HERE
-
-		String output = "";
-
-		for (Agent agent : occupiedAgents) {
-			output += agent + "\n";
+		if (!occupiedAgents.isEmpty()) {
+			StringBuilder serviceLine = new StringBuilder();
+			for (Agent agent : occupiedAgents) {
+				serviceLine.append(agent.toString()).append("\n");
+			}
+			return serviceLine.toString();	
 		}
-		
-		return output;
-		// TO HERE
-
+		return null;
 	}
 	
 	public String makeAnnouncement( Agent agent ) {
-		
-		// INSERT HERE
-
-		// A string with announcement like "Serving CL0001 at station STA-002"
-
-		return "Serving " + agent.getCurrentClient().getClientID() + " at station " + agent.getStation() + ".";
-		
-		// TO HERE
-
+		if (agent != null && agent.getCurrentClient() != null) {
+			return "Serving " + agent.getCurrentClient().getClientID() +
+					" at station " + agent.getStation();
+		}
+		return null;
 	}
 } 
