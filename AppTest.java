@@ -1,6 +1,4 @@
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintStream;
 
 import java.util.*;
@@ -8,7 +6,6 @@ import java.util.*;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class AppTest {
 
@@ -43,6 +40,7 @@ public class AppTest {
         agent3 = queue.new Agent();
         agent4 = queue.new Agent();
         agent5 = queue.new Agent();
+
         client = new Customer( "Ryan" );
         client2 = new Customer( "Gage" );
         client3 = new Customer( "Bart" );
@@ -53,16 +51,15 @@ public class AppTest {
         agentNull = null;
         clientNull = null;
 
-        // Regex for agent serving client, matches any numbers
-        agentStr = "Station: STA-\\d{2}, ID: AG\\d{4}, Serving Client: \\[ID: CL\\d{6}, Name: Ryan\\]";
+        // Expected output for agent
+        agentStr = "Station: STA-10, ID: AG1000, Serving Client: [ID: CL100000, Name: Ryan]";
+
 
         // Move System.Out to variable
         output = new ByteArrayOutputStream();
         terminal = new PrintStream( output );
         System.setOut( terminal );
     }
-
-    
 
     @Test
     public void testAddAgent() {
@@ -106,7 +103,6 @@ public class AppTest {
         assertEquals( 0, queue.getOccupiedAgents().size() );
 
         assertEquals( "Error: Client is null, adding idle agent.", output.toString().trim() );
-        
     }
 
     @Test
@@ -147,7 +143,7 @@ public class AppTest {
         assertEquals( 1, queue.getOccupiedAgents().size() );
         assertEquals( 0, queue.getClients().size() );
         
-        assertTrue( returnAgent.toString().matches( agentStr ) );
+        assertEquals( agentStr, returnAgent.toString() );
         
         assertEquals( "", output.toString().trim() );
 
@@ -405,7 +401,7 @@ public class AppTest {
     }
 
     @Test
-    public void testDisplayClients() {
+    public void testDisplayService() {
 
         queue.addAgent( agent );
         queue.addAgent( agent2 );
@@ -422,17 +418,53 @@ public class AppTest {
         assertEquals( 2, queue.getOccupiedAgents().size() );
         assertEquals( 0, queue.getClients().size() );
 
-        String str = queue.displayServingClients();
+        String str = queue.displayServiceLine();
         
-        assertEquals( "[ID: CL100000, Name: Ryan]\n[ID: CL100001, Name: Gage]", str.trim() );
+        assertEquals( "Station: STA-10, ID: AG1000, Serving Client: [ID: CL100000, Name: Ryan]\nStation: STA-11, ID: AG1001, Serving Client: [ID: CL100001, Name: Gage]", str.trim() );
 
         assertEquals( "", output.toString().trim() );
     }
 
+    @Test
+    public void testDisplayServiceEmpty() {
 
+        String str = queue.displayServiceLine();
+        
+        assertEquals( "", str.trim() );
 
+        assertEquals( "Error: No clients being served.", output.toString().trim() );
+    }
 
+    @Test
+    public void testAnnouncementIdle() {
 
+        String str = queue.makeAnnouncement( agent );
+        
+        assertEquals( "Idle at station STA-10.", str.trim() );
 
-    
+        assertEquals( "", output.toString().trim() );
+    }
+
+    @Test
+    public void testAnnouncementOccupied() {
+
+        queue.addAgent( agent, client );
+
+        String str = queue.makeAnnouncement( agent );
+        
+        assertEquals( "Serving CL100000 at station STA-10.", str.trim() );
+
+        assertEquals( "", output.toString().trim() );
+    }
+
+    @Test
+    public void testAnnouncementNullAgent() {
+
+        String str = queue.makeAnnouncement( agentNull );
+        
+        assertEquals( "", str.trim() );
+
+        assertEquals( "Error: Null agent found.", output.toString().trim() );
+    }
+
 }

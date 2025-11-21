@@ -194,6 +194,10 @@ public class QueueProcessor {
 		String output = "";
 
 		for (Client client :  servingClients() ) {
+			if ( client == null ) {
+				System.out.println("Error: Null client found.");
+				continue;
+			}
 			output += client + "\n";
 		}
 
@@ -211,9 +215,17 @@ public class QueueProcessor {
 		String output = "";
 
 		for (Agent agent : occupiedAgents) {
+
+			if ( agent == null ) {
+				System.out.println("Error: Null agent found.");
+				continue;
+			}
 			output += agent + "\n";
 		}
 		
+		if ( output == "" ) System.out.println("Error: No clients being served.");
+
+
 		return output;
 		// TO HERE
 
@@ -223,10 +235,22 @@ public class QueueProcessor {
 		
 		// INSERT HERE
 
-		// A string with announcement like "Serving CL0001 at station STA-002"
-
-		return "Serving " + agent.getCurrentClient().getClientID() + " at station " + agent.getStation() + ".";
+		// If agent null
+		if ( agent == null ) {
+			System.out.println("Error: Null agent found.");
+			return "";
+		} 
 		
+		// Not sure if supposed to output if agent is idle. Assuming we should.
+		// If agent idle
+		if ( agent.getCurrentClient() == null ) {
+			return "Idle at station " + agent.getStation() + ".";
+		}
+
+		// If agent occupied
+		return "Serving " + agent.getCurrentClient().getClientID() + " at station " + agent.getStation() + ".";
+
+
 		// TO HERE
 
 	}
