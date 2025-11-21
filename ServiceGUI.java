@@ -88,12 +88,22 @@ public class ServiceGUI extends Application {
                         updateDisplay();
                     });
 
+                    // Serve All Client(s) Button
+                    Button serveAllButton = new Button( "Serve Client(s)" );
+                    serveAllButton.setOnAction (e -> {
+                        qp.serveClients();
+                        String announcement = "All possible clients now being served.";
+                        announcements.appendText( announcement + "\n" );
+                        updateDisplay();
+                    });
+
                 // Assemble Control Panel
                 controls.getChildren().addAll(
                     addAgentButton,
                     nameInput,
                     addClientButton,
-                    serveButton
+                    serveButton,
+                    serveAllButton
                 );
             
             top.getChildren().addAll( title, controls );
@@ -168,7 +178,7 @@ public class ServiceGUI extends Application {
         main.setBottom( bottom );
         
         // Scene
-        Scene scene = new Scene( main, 1000, 650 );
+        Scene scene = new Scene( main, 1200, 650 );
         primaryStage.setScene( scene );
         primaryStage.show();
 
