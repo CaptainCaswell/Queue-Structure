@@ -53,11 +53,13 @@ public class QueueProcessor {
 		
 		// INSERT HERE
 
-		// I think this should use initialize to clear currentCustomer...
-
-		agent.initialize();
-
-		agents.add( agent );
+		
+		if ( agent != null) {
+			agent.initialize();
+			agents.add( agent );
+		} else {
+			System.out.println("Error: cannot add null agent.");
+		}
 
 		// TO HERE
 	}
@@ -74,11 +76,11 @@ public class QueueProcessor {
 
 		// Check for null client (no client)
 		if ( client == null ) {
-			System.out.println("Error: cannot add null customer.");
+			System.out.println("Error: Client is null, adding idle agent.");
 			agents.add ( agent );
 		}
 
-		// If agent has a client (occupised)
+		// Client is valid (occupised)
 		else {
 			agent.currentClient = client;
 			occupiedAgents.add( agent );
@@ -105,8 +107,18 @@ public class QueueProcessor {
 		
 		// INSERT HERE
 
+		if ( agents.isEmpty() ) {
+			System.out.println("Error: No free agents available.");
+			return;
+		}
+
+		if ( clients.isEmpty() ) {
+			System.out.println("Error: No customers waiting.");
+			return;
+		}
+
 		// As long as there or free agents and unserved clients, assign first agent to first client
-		while ( !agents.isEmpty() &&  !clients.isEmpty() ) {
+		while ( !agents.isEmpty() && !clients.isEmpty() ) {
 			serveClient();
 		}
 
@@ -129,6 +141,18 @@ public class QueueProcessor {
 			return null;
 		}
 
+		if ( agents.peek() == null ) {
+			agents.poll();
+			System.out.println("Error: Null agent found.");
+			return null;
+		}
+
+		if ( clients.peek() == null ) {
+			clients.poll();
+			System.out.println("Error: Null client found.");
+			return null;
+		}
+
 		Agent tempAgent = agents.poll();
 		tempAgent.currentClient = clients.poll();
 
@@ -145,8 +169,18 @@ public class QueueProcessor {
 
 		List<Client> helped = new LinkedList<Client>();
 
-		for (Agent i : occupiedAgents) {
-			helped.add(i.currentClient);
+		for ( Agent agent : getOccupiedAgents() ) {
+			if ( agent == null ) {
+				System.out.println("Error: Null agent found.");
+				continue;
+			}
+
+			if ( agent.getCurrentClient() == null ) {
+				System.out.println("Error: Null client found.");
+				continue;
+			}
+			
+			helped.add( agent.getCurrentClient() );
 		}
 
 		return helped;
@@ -162,6 +196,8 @@ public class QueueProcessor {
 		for (Client client :  servingClients() ) {
 			output += client + "\n";
 		}
+
+		if ( output == "" ) System.out.println("Error: No clients being served.");
 		
 		return output;
 		// TO HERE
